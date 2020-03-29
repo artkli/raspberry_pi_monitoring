@@ -11,6 +11,12 @@
   ],
   "__requires": [
     {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
@@ -53,7 +59,7 @@
   "gnetId": 10578,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1585484728431,
+  "iteration": 1585500591629,
   "links": [],
   "panels": [
     {
@@ -448,68 +454,62 @@
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": true,
-      "colors": [
-        "#5794F2",
-        "#73BF69",
-        "rgba(245, 54, 54, 0.9)"
-      ],
       "datasource": "${DS_TELEGRAF}",
-      "decimals": 0,
-      "editable": true,
-      "error": false,
-      "format": "hertz",
-      "gauge": {
-        "maxValue": 2000000000,
-        "minValue": 0,
-        "show": true,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
       "gridPos": {
         "h": 4,
         "w": 2,
         "x": 6,
         "y": 1
       },
-      "height": "150",
       "id": 61863,
-      "interval": null,
+      "interval": "$inter",
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
+      "options": {
+        "fieldOptions": {
+          "calcs": [
+            "last"
+          ],
+          "defaults": {
+            "decimals": 1,
+            "mappings": [
+              {
+                "id": 0,
+                "op": "=",
+                "text": "N/A",
+                "type": 1,
+                "value": "null"
+              }
+            ],
+            "max": 2000000000,
+            "min": 0,
+            "nullValueMode": "connected",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "dark-blue",
+                  "value": null
+                },
+                {
+                  "color": "dark-green",
+                  "value": 700000000
+                },
+                {
+                  "color": "dark-red",
+                  "value": 1550000000
+                }
+              ]
+            },
+            "unit": "hertz"
+          },
+          "overrides": [],
+          "values": false
         },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "options": {},
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
+        "orientation": "horizontal",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
       },
-      "tableColumn": "",
+      "pluginVersion": "6.6.2",
       "targets": [
         {
           "dsType": "influxdb",
@@ -546,6 +546,12 @@
               {
                 "params": [],
                 "type": "last"
+              },
+              {
+                "params": [
+                  "* 1000"
+                ],
+                "type": "math"
               }
             ]
           ],
@@ -558,18 +564,8 @@
           ]
         }
       ],
-      "thresholds": "500000000, 1500000000, 2000000000",
       "title": "CPU frequency",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
+      "type": "gauge"
     },
     {
       "cacheTimeout": null,
@@ -1141,6 +1137,8 @@
           "measurement": "cpu",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT last(\"usage_idle\") * -1 + 100 FROM \"cpu\" WHERE (\"host\" =~ /^$server$/ AND \"cpu\" = 'cpu-total') AND $timeFilter GROUP BY time($interval) fill(null)",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -4967,5 +4965,5 @@
   "timezone": "browser",
   "title": "Raspberry Pi Monitoring",
   "uid": "sF7d-FHZz",
-  "version": 24
+  "version": 40
 }
