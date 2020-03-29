@@ -1,2 +1,2 @@
 # raspberry_pi_monitoring
-grafana
+Grafana dashboard.
